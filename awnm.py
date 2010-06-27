@@ -37,6 +37,10 @@ class AWNMMain:
                     or (event.key == K_UP)
                     or (event.key == K_DOWN)):
                         self.water.move(event.key)
+            """Check for collision"""
+            lstCols = pygame.sprite.spritecollide(self.water, self.sand_sprites, True)
+            """Update the amount of pellets eaten"""
+            self.water.volume = self.water.volume + len(lstCols)
             self.sand_sprites.draw(self.screen)
             self.water_sprites.draw(self.screen)
             pygame.display.flip()
