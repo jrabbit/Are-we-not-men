@@ -31,18 +31,54 @@ class AWNMMain:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: 
                     sys.exit()
+                elif event.type == KEYDOWN:
+                    if ((event.key == K_RIGHT)
+                    or (event.key == K_LEFT)
+                    or (event.key == K_UP)
+                    or (event.key == K_DOWN)):
+                        self.water.move(event.key)
+            self.sand_sprites.draw(self.screen)
             self.water_sprites.draw(self.screen)
             pygame.display.flip()
     def LoadSprites(self):
         """Load the sprites that we need"""
         self.water = Water()
         self.water_sprites = pygame.sprite.RenderPlain((self.water))  
+        """figure out how many pellets we can display"""
+        nNumHorizontal = int(self.width/64)
+        nNumVertical = int(self.height/64)       
+        """Create the Pellet group"""
+        self.sand_sprites = pygame.sprite.Group()
+        """Create all of the pellets and add them to the 
+        pellet_sprites group"""
+        for x in range(nNumHorizontal):
+            for y in range(nNumVertical):
+                self.sand_sprites.add(Sand(pygame.Rect(x*64, y*64, 64, 64)))
 
 class Water(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) 
         self.image, self.rect = load_image('water.png',-1)
         self.volume = 0
+        self.x_dist = 15
+        self.y_dist = 15
+        #ME GO TOO FAR!
+    def move(self, key):
+        """Move your self in one of the 4 directions according to key"""
+        """Key is the pyGame define for either up,down,left, or right key
+        we will adjust ourselves in that direction"""
+        xMove = 0;
+        yMove = 0;
+
+        if (key == K_RIGHT):
+            xMove = self.x_dist
+        elif (key == K_LEFT):
+            xMove = -self.x_dist
+        elif (key == K_UP):
+            yMove = -self.y_dist
+        elif (key == K_DOWN):
+            yMove = self.y_dist
+        self.rect.move_ip(xMove,yMove);
 
 class Sand(pygame.sprite.Sprite):
     def __init__(self, rect=None):
